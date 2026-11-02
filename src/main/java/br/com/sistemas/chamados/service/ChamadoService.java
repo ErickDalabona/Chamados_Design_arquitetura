@@ -1,18 +1,21 @@
 package br.com.sistemas.chamados.service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.sistemas.chamados.dto.AtribuirTecnicoRequest;
 import br.com.sistemas.chamados.dto.ChamadoRequest;
 import br.com.sistemas.chamados.dto.ChamadoResponse;
+import br.com.sistemas.chamados.dto.PaginaResponse;
 import br.com.sistemas.chamados.dto.StatusRequest;
 import br.com.sistemas.chamados.entity.Categoria;
 import br.com.sistemas.chamados.entity.Chamado;
 import br.com.sistemas.chamados.entity.Cliente;
+import br.com.sistemas.chamados.entity.Prioridade;
 import br.com.sistemas.chamados.entity.StatusChamado;
 import br.com.sistemas.chamados.entity.Tecnico;
 import br.com.sistemas.chamados.exception.RecursoNaoEncontradoException;
@@ -50,9 +53,29 @@ public class ChamadoService {
         return ChamadoResponse.de(salvo);
     }
 
+    /** Lista com filtros opcionais (status, prioridade, cliente), paginação e ordenação. */
     @Transactional(readOnly = true)
-    public List<ChamadoResponse> listar() {
-        return repository.findAll().stream().map(ChamadoResponse::de).toList();
+    public PaginaResponse<ChamadoResponse> listar(
+            StatusChamado status, Prioridade prioridade, Long clienteId, Pageable pageable) {
+        Specification<Chamado> filtro = (root, query, cb) -> cb.conjunction();
+        if (status != null) {
+            filtro = filtro.and((root, query, cb) -> cb.equal(root.get("status"), status));
+        }
+        if (prioridade != null) {
+            filtro = filtro.and((root, query, cb) -> cb.equal(root.get("prioridade"), prioridade));
+        }
+        if (clienteId != null) {
+            filtro = filtro.and((root, query, cb) ->
+                cb.equal(root.get("cliente").get("id"), clienteId));
+        }
+        return PaginaResponse.de(repository.findAll(filtro, pageable).map(ChamadoResponse::de));
+    }
+
+    /** Chamados de um cliente. Se o cliente não existe, responde 404. */
+    @Transactional(readOnly = true)
+    public PaginaResponse<ChamadoResponse> listarPorCliente(Long clienteId, Pageable pageable) {
+        buscarCliente(clienteId);
+        return listar(null, null, clienteId, pageable);
     }
 
     @Transactional(readOnly = true)
