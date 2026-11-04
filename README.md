@@ -8,6 +8,8 @@ API REST em Java 21 e Spring Boot (arquitetura em camadas), com H2 em memória.
 
 A API sobe em http://localhost:8080 e o console do H2 em /h2-console.
 
+Documentação da API (Swagger): http://localhost:8080/swagger-ui.html
+
 ## Rotas
 
 | Recurso | Rotas |
