@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="cabecalho(titulo)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${titulo} + ' - Sistema de Chamados'">Sistema de Chamados</title>
+    <link rel="stylesheet" th:href="@{/css/estilo.css}">
+</head>
+<body>
+<nav th:fragment="menu" class="menu">
+    <span class="marca">Chamados</span>
+    <a th:href="@{/app}">Dashboard</a>
+    <a th:href="@{/app/clientes}">Clientes</a>
+</nav>
+</body>
+</html>
