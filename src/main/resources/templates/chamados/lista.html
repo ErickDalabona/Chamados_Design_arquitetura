@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: cabecalho('Chamados')}"></head>
+<body>
+<nav th:replace="~{layout :: menu}"></nav>
+<main>
+    <div class="topo">
+        <h1>Chamados</h1>
+        <a class="botao" th:href="@{/app/chamados/novo}">Novo chamado</a>
+    </div>
+
+    <p class="ok" th:if="${mensagem}" th:text="${mensagem}"></p>
+
+    <form class="filtros" method="get" th:action="@{/app/chamados}">
+        <select name="status">
+            <option value="">Todos os status</option>
+            <option th:each="s : ${statusOpcoes}" th:value="${s}" th:text="${s}"
+                    th:selected="${s == statusFiltro}"></option>
+        </select>
+        <select name="prioridade">
+            <option value="">Todas as prioridades</option>
+            <option th:each="p : ${prioridadeOpcoes}" th:value="${p}" th:text="${p}"
+                    th:selected="${p == prioridadeFiltro}"></option>
+        </select>
+        <select name="clienteId">
+            <option value="">Todos os clientes</option>
+            <option th:each="c : ${clientes}" th:value="${c.id()}" th:text="${c.nome()}"
+                    th:selected="${c.id() == clienteIdFiltro}"></option>
+        </select>
+        <button type="submit">Filtrar</button>
+        <a class="botao secundario" th:href="@{/app/chamados}">Limpar</a>
+    </form>
+
+    <p th:if="${#lists.isEmpty(chamados)}">Nenhum chamado encontrado.</p>
+
+    <table th:unless="${#lists.isEmpty(chamados)}">
+        <thead>
+            <tr><th>ID</th><th>Título</th><th>Cliente</th><th>Status</th><th>Prioridade</th><th>Abertura</th><th></th></tr>
+        </thead>
+        <tbody>
+            <tr th:each="c : ${chamados}">
+                <td th:text="${c.id()}"></td>
+                <td th:text="${c.titulo()}"></td>
+                <td th:text="${c.clienteNome()}"></td>
+                <td th:text="${c.status()}"></td>
+                <td th:text="${c.prioridade()}"></td>
+                <td th:text="${#temporals.format(c.dataAbertura(), 'dd/MM/yyyy HH:mm')}"></td>
+                <td><a class="botao" th:href="@{/app/chamados/{id}(id=${c.id()})}">Ver</a></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="paginacao" th:if="${totalPaginas > 1}">
+        <a class="botao secundario" th:if="${paginaAtual > 0}"
+           th:href="@{/app/chamados(pagina=${paginaAtual - 1}, status=${statusFiltro}, prioridade=${prioridadeFiltro}, clienteId=${clienteIdFiltro})}">Anterior</a>
+        <span th:text="${paginaAtual + 1} + ' / ' + ${totalPaginas}"></span>
+        <a class="botao secundario" th:if="${paginaAtual + 1 < totalPaginas}"
+           th:href="@{/app/chamados(pagina=${paginaAtual + 1}, status=${statusFiltro}, prioridade=${prioridadeFiltro}, clienteId=${clienteIdFiltro})}">Próxima</a>
+    </div>
+</main>
+</body>
+</html>

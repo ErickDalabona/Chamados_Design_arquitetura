@@ -16,7 +16,16 @@ th, td { text-align: left; padding: 10px; border-bottom: 1px solid #e5e7eb; }
 .numero { font-size: 28px; font-weight: bold; }
 .formulario { background: #fff; padding: 20px; border-radius: 8px; max-width: 480px; }
 .formulario label { display: block; margin-top: 14px; }
-.formulario input { display: block; width: 100%; padding: 8px; margin-top: 4px; box-sizing: border-box; }
+.formulario input, .formulario select, .formulario textarea { display: block; width: 100%; padding: 8px; margin-top: 4px; box-sizing: border-box; }
 .formulario .acoes { margin-top: 20px; }
 .erro { color: #b91c1c; font-size: 14px; margin-top: 4px; }
 .ok { color: #047857; }
+.filtros { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; align-items: center; }
+.filtros select { padding: 8px; border-radius: 6px; border: 1px solid #d1d5db; }
+.paginacao { display: flex; gap: 12px; align-items: center; margin-top: 20px; }
+.detalhe-info { margin-bottom: 24px; max-width: 600px; }
+.detalhe-info p { margin: 8px 0; }
+.inline-form { display: flex; gap: 10px; align-items: center; margin-bottom: 20px; }
+.inline-form select { padding: 8px; border-radius: 6px; border: 1px solid #d1d5db; }
+.comentario { background: #fff; border-radius: 8px; padding: 14px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+.comentario-cabecalho { display: flex; justify-content: space-between; margin-bottom: 6px; color: #6b7280; font-size: 14px; }
