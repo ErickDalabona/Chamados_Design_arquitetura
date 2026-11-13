@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: cabecalho('Chamado')}"></head>
+<body>
+<nav th:replace="~{layout :: menu}"></nav>
+<main>
+    <div class="topo">
+        <h1 th:text="'Chamado #' + ${chamado.id()} + ' - ' + ${chamado.titulo()}">Chamado</h1>
+        <a class="botao secundario" th:href="@{/app/chamados}">Voltar</a>
+    </div>
+
+    <p class="ok" th:if="${mensagem}" th:text="${mensagem}"></p>
+    <p class="erro" th:if="${erro}" th:text="${erro}"></p>
+
+    <section class="card detalhe-info">
+        <p><strong>Cliente:</strong> <span th:text="${chamado.clienteNome()}"></span></p>
+        <p><strong>Categoria:</strong> <span th:text="${chamado.categoriaNome()}"></span></p>
+        <p><strong>Prioridade:</strong> <span th:text="${chamado.prioridade()}"></span></p>
+        <p><strong>Status:</strong> <span th:text="${chamado.status()}"></span></p>
+        <p><strong>Técnico:</strong>
+            <span th:text="${chamado.tecnicoNome() != null ? chamado.tecnicoNome() : 'Não atribuído'}"></span>
+        </p>
+        <p><strong>Abertura:</strong>
+            <span th:text="${#temporals.format(chamado.dataAbertura(), 'dd/MM/yyyy HH:mm')}"></span>
+        </p>
+        <p th:if="${chamado.dataFechamento() != null}"><strong>Fechamento:</strong>
+            <span th:text="${#temporals.format(chamado.dataFechamento(), 'dd/MM/yyyy HH:mm')}"></span>
+        </p>
+        <p><strong>Descrição:</strong> <span th:text="${chamado.descricao()}"></span></p>
+    </section>
+
+    <section th:if="${chamado.status().name() != 'FECHADO'}">
+        <h2>Alterar status</h2>
+        <form class="inline-form" th:action="@{/app/chamados/{id}/status(id=${chamado.id()})}" method="post">
+            <select name="novoStatus">
+                <option th:each="s : ${statusOpcoes}" th:value="${s}" th:text="${s}"
+                        th:selected="${s == chamado.status()}"></option>
+            </select>
+            <button type="submit">Alterar</button>
+        </form>
+
+        <h2>Atribuir técnico</h2>
+        <form class="inline-form" th:action="@{/app/chamados/{id}/atribuir(id=${chamado.id()})}" method="post">
+            <select name="tecnicoId">
+                <option value="">Nenhum</option>
+                <option th:each="t : ${tecnicos}" th:value="${t.id()}" th:text="${t.nome()}"
+                        th:selected="${t.id() == chamado.tecnicoId()}"></option>
+            </select>
+            <button type="submit">Atribuir</button>
+        </form>
+    </section>
+
+    <h2>Comentários</h2>
+    <p th:if="${#lists.isEmpty(comentarios)}">Nenhum comentário.</p>
+    <div th:each="c : ${comentarios}" class="comentario">
+        <div class="comentario-cabecalho">
+            <strong th:text="${c.autor()}"></strong>
+            <span th:text="${#temporals.format(c.data(), 'dd/MM/yyyy HH:mm')}"></span>
+        </div>
+        <p th:text="${c.texto()}"></p>
+    </div>
+
+    <h2>Novo comentário</h2>
+    <form class="formulario" th:action="@{/app/chamados/{id}/comentarios(id=${chamado.id()})}" method="post">
+        <label>Autor
+            <input type="text" name="autor">
+        </label>
+        <label>Texto
+            <textarea name="texto" rows="3"></textarea>
+        </label>
+        <div class="acoes">
+            <button type="submit">Registrar</button>
+        </div>
+    </form>
+</main>
+</body>
+</html>

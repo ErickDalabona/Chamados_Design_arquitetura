@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: cabecalho('Dashboard')}"></head>
+<body>
+<nav th:replace="~{layout :: menu}"></nav>
+<main>
+    <h1>Dashboard</h1>
+
+    <section class="cards">
+        <div class="card"><span class="numero" th:text="${resumo.clientes()}">0</span><span>Clientes</span></div>
+        <div class="card"><span class="numero" th:text="${resumo.categorias()}">0</span><span>Categorias</span></div>
+        <div class="card"><span class="numero" th:text="${resumo.tecnicos()}">0</span><span>Técnicos</span></div>
+        <div class="card"><span class="numero" th:text="${resumo.chamados()}">0</span><span>Chamados</span></div>
+    </section>
+
+    <h2>Chamados por status</h2>
+    <section class="cards">
+        <div class="card" th:each="item : ${resumo.porStatus()}">
+            <span class="numero" th:text="${item.value}">0</span>
+            <span th:text="${item.key}">STATUS</span>
+        </div>
+    </section>
+</main>
+</body>
+</html>

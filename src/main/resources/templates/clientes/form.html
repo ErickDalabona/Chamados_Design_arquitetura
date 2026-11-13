@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: cabecalho(${titulo})}"></head>
+<body>
+<nav th:replace="~{layout :: menu}"></nav>
+<main>
+    <h1 th:text="${titulo}">Cliente</h1>
+
+    <form class="formulario" th:action="@{${acao}}" th:object="${cliente}" method="post">
+        <label>Nome
+            <input type="text" th:field="*{nome}">
+        </label>
+        <div class="erro" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></div>
+
+        <label>E-mail
+            <input type="text" th:field="*{email}">
+        </label>
+        <div class="erro" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+
+        <label>Telefone
+            <input type="text" th:field="*{telefone}">
+        </label>
+        <div class="erro" th:if="${#fields.hasErrors('telefone')}" th:errors="*{telefone}"></div>
+
+        <div class="acoes">
+            <button type="submit">Salvar</button>
+            <a class="botao secundario" th:href="@{/app/clientes}">Cancelar</a>
+        </div>
+    </form>
+</main>
+</body>
+</html>

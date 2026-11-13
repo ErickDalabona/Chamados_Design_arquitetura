@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: cabecalho(${titulo})}"></head>
+<body>
+<nav th:replace="~{layout :: menu}"></nav>
+<main>
+    <h1 th:text="${titulo}">Chamado</h1>
+
+    <p class="erro" th:if="${erroGeral}" th:text="${erroGeral}"></p>
+
+    <form class="formulario" th:action="@{${acao}}" th:object="${chamado}" method="post">
+        <label>Título
+            <input type="text" th:field="*{titulo}">
+        </label>
+        <div class="erro" th:if="${#fields.hasErrors('titulo')}" th:errors="*{titulo}"></div>
+
+        <label>Descrição
+            <textarea th:field="*{descricao}" rows="4"></textarea>
+        </label>
+        <div class="erro" th:if="${#fields.hasErrors('descricao')}" th:errors="*{descricao}"></div>
+
+        <label>Prioridade
+            <select th:field="*{prioridade}">
+                <option value="">Selecione</option>
+                <option th:each="p : ${prioridades}" th:value="${p}" th:text="${p}"></option>
+            </select>
+        </label>
+        <div class="erro" th:if="${#fields.hasErrors('prioridade')}" th:errors="*{prioridade}"></div>
+
+        <label>Cliente
+            <select th:field="*{clienteId}">
+                <option value="">Selecione</option>
+                <option th:each="c : ${clientes}" th:value="${c.id()}" th:text="${c.nome()}"></option>
+            </select>
+        </label>
+        <div class="erro" th:if="${#fields.hasErrors('clienteId')}" th:errors="*{clienteId}"></div>
+
+        <label>Categoria
+            <select th:field="*{categoriaId}">
+                <option value="">Selecione</option>
+                <option th:each="c : ${categorias}" th:value="${c.id()}" th:text="${c.nome()}"></option>
+            </select>
+        </label>
+        <div class="erro" th:if="${#fields.hasErrors('categoriaId')}" th:errors="*{categoriaId}"></div>
+
+        <label>Técnico (opcional)
+            <select th:field="*{tecnicoId}">
+                <option value="">Nenhum</option>
+                <option th:each="t : ${tecnicos}" th:value="${t.id()}" th:text="${t.nome()}"></option>
+            </select>
+        </label>
+
+        <div class="acoes">
+            <button type="submit">Abrir chamado</button>
+            <a class="botao secundario" th:href="@{/app/chamados}">Cancelar</a>
+        </div>
+    </form>
+</main>
+</body>
+</html>
